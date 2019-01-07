@@ -1,0 +1,134 @@
+<html>
+    <body>
+        <div class="content">
+            <form id="fileForm" class="box" method="post" action="/api/upload" enctype="multipart/form-data">
+                <input class="box-file" type="file" name="file" id="file" />
+                <div id="dndArea" class="drag-n-drop">
+                    <div class="middle-tc">
+                        <div class="dnd-help">Drag and Drop</div>
+                    </div>
+                </div>
+            </form>
+            <div class="url-footer hidden">
+                <div class="url-holder">
+                    <div id="urlValue" class="url">URL</div>
+                </div>
+                <div class="button-holder">
+                    <button id="btnCopy" class="copy-to-clipboard">cp</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        div.content {
+            width: 500px;
+            margin: 25px auto;
+        }
+
+        input.box-file {
+            display: none;
+        }
+
+        div.drag-n-drop {
+            border: 2px solid #dbdbdb;
+            background-color: #f4f4f4;
+            height: 350px;
+            width: 100%;
+            display: table;
+            border-radius: 7px;
+        }
+
+        div.middle-tc {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        div.drag-n-drop div.dnd-help {
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px 10px;
+            border: 2px dashed #a6a6a6;
+            background-color: #eaeaea;
+            width: 150px;
+            text-align: center;
+            color: #585858ba;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        div.drag-n-drop div.dnd-help:hover {
+            cursor: pointer;
+            background-color: #e0dede;
+        }
+
+        div.url-footer {
+            width: 98%;
+            padding: 5px 4px;
+            border-radius: 2px;
+            border: 2px solid #dbdbdb;
+            background-color: #f4f4f4;
+        }
+
+        div.url-holder {
+            display: inline;
+        }
+
+        div.button-holder {
+            display: inline;
+        }
+
+        div.url {
+            border: 1px solid #a6a6a6;
+            background-color: white;
+            display: inline-block;
+            height: 20px;
+            padding: 1px 3px;
+            width: 89%;
+            font-size: 15px;
+        }
+
+        button.copy-to-clipboard {
+            height: 25px;
+            width: 40px;
+        }
+
+    </style>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script>
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        var $fileForm = $("#fileForm");
+        var $fileInput = $("#file");
+        var $dnd = $('#dndArea');
+        var $urlFooter = $("div.url-footer");
+        var $urlValue = $("#urlValue");
+
+        $dnd.click(function () {
+            $fileInput.click()
+        });
+
+        $fileInput.change(function() {
+            $fileForm.submit();
+        });
+
+        $("#btnCopy").click(function() {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($urlValue.html()).select();
+            document.execCommand("copy");
+            $temp.remove();
+        });
+
+        if (urlParams.has("token")) {
+            $urlFooter.removeClass("hidden");
+            $urlValue.html("http://" + location.host + "/api/download?token=" + urlParams.get("token"));
+        }
+        
+    </script>
+</html>
