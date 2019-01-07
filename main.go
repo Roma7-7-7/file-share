@@ -7,6 +7,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -91,7 +92,6 @@ func handleFileUpload(w http.ResponseWriter, r *http.Request) {
 
 	var out *os.File
 	var sid string
-	log.Println(handler)
 	if sid, err = shortid.Generate(); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -164,8 +164,7 @@ func handleFileDownload(w http.ResponseWriter, r *http.Request) {
 
 	defer removeUploadDetailsAndFile(token)
 
-	w.Header().Set("Content-Disposition", "attachment; filename="+details.Name)
-	w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
+	w.Header().Set("Content-Disposition", "attachment; filename*=UTF-8''"+url.QueryEscape(details.Name))
 
 	io.Copy(w, respFile)
 }
